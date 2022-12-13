@@ -1,0 +1,20 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "About this blog",
+      "description": "Some additional details about the blog",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2022-12-11T22:33:34-06:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Top Fifty One",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2022-12-11T22:33:35-06:00"
+    }
+  ],
+  "collections": ["posts/posts.json"]
+}
