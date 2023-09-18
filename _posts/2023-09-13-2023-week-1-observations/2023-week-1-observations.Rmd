@@ -1,0 +1,188 @@
+---
+title: "2023 Week 1 Observations"
+description: |
+  A couple observations from week one of the 2023 NFL season
+author:
+  - name: Brandon Brobst
+date: 2023-09-13
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+This blog was supposed to be a New Year's resolution. I suppose I could call it a New Football Season resolution.
+
+Anyway, it's great to have football back. Here are a few things I noticed from the first week of games.
+
+#### Reich and Smith putting the training wheels on their young QBs
+
+I was anticipating this Carolina-Atlanta game since it included two quarterbacks debuting as QB1.
+
+It was evident that Frank Reich and Arthur Smith wanted to keep things simple for their young QBs by focusing early downs on running the ball.
+
+```{r fig.width = 10, fig.height = 5, fig.asp=1, echo=FALSE}
+library(nflreadr)
+library(nflplotR)
+library(tidyverse)
+library(gt)
+library(gtExtras)
+pbp_23 <- nflreadr::load_pbp(seasons = 2023)
+
+first_second_down_pass_rate <- pbp_23 |> 
+  dplyr::filter(week == 1) |> 
+  dplyr::filter(down == 1 | down == 2) |> 
+  dplyr::filter(wp >= 0.2 & wp <= 0.8 & half_seconds_remaining > 120) |> 
+  dplyr::group_by(posteam) |> 
+  dplyr::summarise(plays = dplyr::n(),
+                   pass_rate = round(mean(pass)* 100,2)) |>
+  dplyr::ungroup() |> 
+  dplyr::arrange(pass_rate) |> 
+  mutate(posteam = factor(posteam, levels=posteam))
+
+early_down_pass_rate <- first_second_down_pass_rate |>
+  ggplot(aes(x=posteam,
+             y=pass_rate)) +
+    geom_hline(yintercept = 52.85) +
+    geom_segment(aes(x=posteam,
+                     xend=posteam,
+                     y=52.85,
+                     yend=pass_rate,
+                     color=posteam,
+                     linewidth = 1.5)) +
+    geom_nfl_logos(aes(team_abbr = posteam, width = 0.03)) +
+    scale_color_nfl(type = "primary") +
+    theme_light() +
+    coord_flip() +
+    ylab("Pass Rate") +
+    xlab("") +
+    theme(
+      panel.grid.major.y = element_blank(),
+      panel.border = element_blank(),
+      axis.ticks.y = element_blank(),
+      axis.text.y = element_blank(),
+      legend.position = "none",
+      plot.title = element_text(hjust = 0.5),
+      plot.subtitle = element_text(hjust = 0.5)) +
+    annotate("label",
+           x = "TEN",
+           y = 60,
+           label = c("League Average: 52.85%"),
+           family = "", fontface = 3, size=4) +
+    labs(title = "Early-down pass frequency",
+         subtitle = "win probability 20-80% | 2023 Week 1",
+         caption = "Data: {nflreadr}")
+
+early_down_pass_rate
+```
+
+Carolina and Atlanta were 2 of the bottom 4 teams in early-down pass rate in week one. A single game is of course a small sample, so it'll be interesting to see if these teams open up the playbook on early downs as the season goes on (particularly Carolina as they get DJ Chark back from injury).
+
+Unrelated thought: Brian Burns is awesome. Pay him.
+
+#### Monken engineering touches for Zay Flowers
+
+A lot has been said about this, but it definitely jumped out when watching the game. A couple of first-quarter jet sweeps and nearly two-thirds of his receiving yards coming after the catch tells me OC Todd Monken designed a gameplan to get the ball in Flowers' hands in space and let him work.
+
+``` {r echo=FALSE}
+ 
+offense_stats <- nflreadr::load_player_stats(stat_type = 'offense')
+
+off_snaps_by_team <- pbp_23 |> 
+  dplyr::filter(week == 1) |> 
+  dplyr::filter(pass == 1 | rush == 1) |> 
+  dplyr::group_by(posteam) |> 
+  dplyr::summarise(offensive_snaps = dplyr::n()) |> 
+  dplyr::select(posteam, offensive_snaps) |> 
+  dplyr::ungroup()
+
+wr_stats <- offense_stats |> 
+  dplyr::filter(position == "WR" & week == 1) |> 
+  dplyr::rowwise() |> 
+  dplyr::mutate(tandc = sum(targets,carries, na.rm = T)) |> 
+  dplyr::left_join(off_snaps_by_team,
+                   by = c('recent_team' = 'posteam')) |> 
+  dplyr::mutate(tandcperos = round(tandc / offensive_snaps * 50, 2)) |> 
+  dplyr::arrange(desc(tandcperos)) |> 
+  dplyr::select(player_id, player_name, tandcperos) |> 
+  dplyr::ungroup() #have to ungroup() the "undo" the rowwise to slice later
+
+
+wr_stats_table <- wr_stats |> 
+  dplyr::slice(1:10) |> 
+  gt() |> 
+  nflplotR::gt_nfl_headshots('player_id') |> 
+  tab_header(
+    title = "Wide Receiver Involvement",
+    subtitle = glue::glue("Targets and carries per 50 offensive snaps")
+  ) |> 
+    cols_label(
+    player_id = html(""),
+    player_name = html("Player"),
+    tandcperos = html("Targets and Carries per 50"),
+  )
+  
+
+wr_stats_table
+```
+
+Flowers measured up with offense centerpieces like Justin Jefferson, Stefon Diggs, and Ja'Marr Chase in terms of involvement in the offense. This will certainly fall back a bit when the Ravens get Mark Andrews back from injury, but it's exciting for the Ravens and recently-extended Lamar Jackson to have skill players worth planning around.
+
+#### Seattle's Pass Rush
+
+The biggest factor I noticed in the Rams' upset victory over the Seahawks was how clean Matt Stafford was all game- Seattle managed zero sacks in the contest.
+
+```{r echo=FALSE}
+  wk1prg23 <- read.csv("~/My Web Sites/topfiftyone/_posts/2023-09-13-2023-week-1-observations/data/wk1prg23.csv",
+                       fileEncoding="UTF-8-BOM")
+  
+#mutate team col to uppercase for the join
+wk1prg23 <- wk1prg23 |> 
+    dplyr::mutate_at(.funs=toupper,
+                     .vars = 'team')
+
+  pfr_adv_passing <-nflreadr::load_pfr_advstats(stat_type = "pass")
+
+  pressure_data_by_team <- pfr_adv_passing |> 
+    dplyr::group_by(team, opponent) |> 
+    dplyr::summarise(total_pressure_rate = mean(times_pressured_pct)) |> 
+    dplyr::ungroup() |> 
+    dplyr::select(opponent, total_pressure_rate) |> 
+    dplyr::left_join(wk1prg23,
+                     by = c('opponent' = 'team'))
+  
+  pass_rush_plot <- pressure_data_by_team |>
+    dplyr::mutate(alpha = ifelse(opponent == "SEA", 0.9, 0.2)) |> 
+    ggplot(aes(x = prg,
+               y = total_pressure_rate*100)) +
+    nflplotR::geom_nfl_logos(aes(team_abbr = opponent,
+                                 alpha = alpha),
+                             width = 0.065) +
+    ylab("Pressure Rate (%)") +
+    xlab("PFF Pass Rush Grade") +
+    labs(title = "Team-level pass rush measures",
+         subtitle = "2023 Week 1",
+         caption = "Data: PFF and pro-football-reference.com") +
+    theme_minimal()
+    
+pass_rush_plot
+```
+
+This is not the return Seattle wanted to see after an offseason of investment in the defensive front: They made Dre'Mont Jones the 13th highest paid interior defender in terms of APY, as well as the $45 million contract extension for Uchenna Nwosu.
+
+One reason for optimism on this unit is Seattle ranked 10th in [ESPN's Pass Rush Win Rate](https://www.espn.com/nfl/story/_/id/38356170/2023-nfl-pass-rush-run-stop-blocking-win-rate-rankings-top-players-teams) in week one. This tells me that Seattle has the ingredients for some effective pass rush, but clever pocket movement from Stafford may have limited their measured pass rush statistics.
+
+## {.appendix}
+
+Code to generate the figures in this post can be found on the [topfiftyone github repository](https://github.com/bdbrobst/topfiftyone)
+
+Cap figures courtesy of [overthecap.com](https://overthecap.com/)
+
+topfiftyone is powered by Distill.
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
