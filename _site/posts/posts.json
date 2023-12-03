@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2023-11-28-path-forward-glossary/",
+    "title": "Path Forward Glossary",
+    "description": "A short description of the post.",
+    "author": [
+      {
+        "name": "Brandon Brobst",
+        "url": {}
+      }
+    ],
+    "date": "2023-11-28",
+    "categories": [],
+    "contents": "\r\nWeek 13 is the first week in which teams can be eliminated from playoff contention.\r\nAs teams are eliminated, I’ll be rolling out a “Path Forward” entry for each team, an examination the team’s avenues for improvement through the lens of their 2024 salary cap.\r\nThis article will serve as a glossary of terms used in those entries.\r\n2023 Cap Space: Remaining Salary Cap from the 2023 League Year.\r\nDead Cap: Current Dead Cap\r\nPotential Dead Cap of Voids:* The potential dead cap incurred if all of the team’s players with a 2024 Void year do not return to the team.\r\nTotal Restructure Salary: The total amount of 2024 P5 (or Base Salary) that can be converted to prorated bonus for players with at least one contract year beyond 2024.\r\nPotential Restructure Savings: The potential 2024 cap savings if all of the Total Restructure Salary is converted to prorated bonus\r\nDistill is a publication format for scientific and technical writing, native to the web.\r\nLearn more about using Distill at https://rstudio.github.io/distill.\r\n\r\n\r\n\r\n",
+    "preview": {},
+    "last_modified": "2023-12-03T13:42:26-06:00",
+    "input_file": "path-forward-glossary.knit.md"
+  },
+  {
     "path": "posts/2023-09-13-2023-week-1-observations/",
     "title": "2023 Week 1 Observations",
     "description": "A couple observations from week one of the 2023 NFL season",

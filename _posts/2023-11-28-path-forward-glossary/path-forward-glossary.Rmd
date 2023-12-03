@@ -1,0 +1,35 @@
+---
+title: "Path Forward Glossary"
+description: |
+  A short description of the post.
+author:
+  - name: Brandon Brobst
+    url: {}
+date: 2023-11-28
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Week 13 is the first week in which [teams can be eliminated from playoff contention](https://www.threads.net/@brykno_/post/C0LZ8FXMezz). 
+
+As teams are eliminated, I'll be rolling out a "Path Forward" entry for each team, an examination the team's avenues for improvement through the lens of their 2024 salary cap.
+
+This article will serve as a glossary of terms used in those entries.
+
+* __2023 Cap Space:__ Remaining Salary Cap from the 2023 League Year.
+* __Dead Cap:__ Current Dead Cap
+* __Potential Dead Cap of Voids:__* The potential dead cap incurred if all of the team's players with a 2024 Void year do not return to the team.
+*  __Total Restructure Salary:__ The total amount of 2024 P5 (or Base Salary) that can be converted to prorated bonus for players with at least one contract year beyond 2024.
+* __Potential Restructure Savings:__ The potential 2024 cap savings if all of the Total Restructure Salary is converted to prorated bonus
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+
