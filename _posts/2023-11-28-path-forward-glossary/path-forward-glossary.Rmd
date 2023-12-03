@@ -1,7 +1,7 @@
 ---
 title: "Path Forward Glossary"
 description: |
-  A short description of the post.
+  Definitions of the terms used in the 2024 Path Forward series
 author:
   - name: Brandon Brobst
     url: {}
