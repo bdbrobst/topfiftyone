@@ -1,22 +1,5 @@
 [
   {
-    "path": "posts/2023-11-28-path-forward-glossary/",
-    "title": "Path Forward Glossary",
-    "description": "A short description of the post.",
-    "author": [
-      {
-        "name": "Brandon Brobst",
-        "url": {}
-      }
-    ],
-    "date": "2023-11-28",
-    "categories": [],
-    "contents": "\r\nWeek 13 is the first week in which teams can be eliminated from playoff contention.\r\nAs teams are eliminated, I’ll be rolling out a “Path Forward” entry for each team, an examination the team’s avenues for improvement through the lens of their 2024 salary cap.\r\nThis article will serve as a glossary of terms used in those entries.\r\n2023 Cap Space: Remaining Salary Cap from the 2023 League Year.\r\nDead Cap: Current Dead Cap\r\nPotential Dead Cap of Voids:* The potential dead cap incurred if all of the team’s players with a 2024 Void year do not return to the team.\r\nTotal Restructure Salary: The total amount of 2024 P5 (or Base Salary) that can be converted to prorated bonus for players with at least one contract year beyond 2024.\r\nPotential Restructure Savings: The potential 2024 cap savings if all of the Total Restructure Salary is converted to prorated bonus\r\nDistill is a publication format for scientific and technical writing, native to the web.\r\nLearn more about using Distill at https://rstudio.github.io/distill.\r\n\r\n\r\n\r\n",
-    "preview": {},
-    "last_modified": "2023-12-03T13:42:26-06:00",
-    "input_file": "path-forward-glossary.knit.md"
-  },
-  {
     "path": "posts/2023-09-13-2023-week-1-observations/",
     "title": "2023 Week 1 Observations",
     "description": "A couple observations from week one of the 2023 NFL season",
@@ -30,8 +13,8 @@
     "categories": [],
     "contents": "\r\nThis blog was supposed to be a New Year’s resolution. I suppose I could call it a New Football Season resolution.\r\nAnyway, it’s great to have football back. Here are a few things I noticed from the first week of games.\r\nReich and Smith putting the training wheels on their young QBs\r\nI was anticipating this Carolina-Atlanta game since it included two quarterbacks debuting as QB1.\r\nIt was evident that Frank Reich and Arthur Smith wanted to keep things simple for their young QBs by focusing early downs on running the ball.\r\n\r\n\r\n\r\nCarolina and Atlanta were 2 of the bottom 4 teams in early-down pass rate in week one. A single game is of course a small sample, so it’ll be interesting to see if these teams open up the playbook on early downs as the season goes on (particularly Carolina as they get DJ Chark back from injury).\r\nUnrelated thought: Brian Burns is awesome. Pay him.\r\nMonken engineering touches for Zay Flowers\r\nA lot has been said about this, but it definitely jumped out when watching the game. A couple of first-quarter jet sweeps and nearly two-thirds of his receiving yards coming after the catch tells me OC Todd Monken designed a gameplan to get the ball in Flowers’ hands in space and let him work.\r\n\r\n\r\nWide Receiver Involvement\r\n    Targets and carries per 50 offensive snaps\r\n    \r\n      Player\r\n      Targets and Carries per 50\r\n    \r\nT.Hill\r\n11.72\r\nD.Hopkins\r\n10.32\r\nS.Diggs\r\n9.56\r\nJ.Jefferson\r\n9.38\r\nZ.Flowers\r\n9.38\r\nJ.Chase\r\n9.26\r\nP.Nacua\r\n9.26\r\nJ.Meyers\r\n9.09\r\nD.Adams\r\n8.18\r\nC.Ridley\r\n7.97\r\n\r\nFlowers measured up with offense centerpieces like Justin Jefferson, Stefon Diggs, and Ja’Marr Chase in terms of involvement in the offense. This will certainly fall back a bit when the Ravens get Mark Andrews back from injury, but it’s exciting for the Ravens and recently-extended Lamar Jackson to have skill players worth planning around.\r\nSeattle’s Pass Rush\r\nThe biggest factor I noticed in the Rams’ upset victory over the Seahawks was how clean Matt Stafford was all game- Seattle managed zero sacks in the contest.\r\n\r\n\r\n\r\nThis is not the return Seattle wanted to see after an offseason of investment in the defensive front: They made Dre’Mont Jones the 13th highest paid interior defender in terms of APY, as well as the $45 million contract extension for Uchenna Nwosu.\r\nOne reason for optimism on this unit is Seattle ranked 10th in ESPN’s Pass Rush Win Rate in week one. This tells me that Seattle has the ingredients for some effective pass rush, but clever pocket movement from Stafford may have limited their measured pass rush statistics.\r\n\r\nCode to generate the figures in this post can be found on the topfiftyone github repository\r\nCap figures courtesy of overthecap.com\r\ntopfiftyone is powered by Distill.\r\nDistill is a publication format for scientific and technical writing, native to the web.\r\nLearn more about using Distill at https://rstudio.github.io/distill.\r\n\r\n\r\n\r\n",
     "preview": "posts/2023-09-13-2023-week-1-observations/2023-week-1-observations_files/figure-html5/unnamed-chunk-1-1.png",
-    "last_modified": "2023-09-17T22:32:37-05:00",
-    "input_file": "2023-week-1-observations.knit.md"
+    "last_modified": "2023-11-25T11:24:37-06:00",
+    "input_file": {}
   },
   {
     "path": "posts/welcome/",
