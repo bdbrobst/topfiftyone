@@ -1,0 +1,124 @@
+---
+title: "2025 Week 1 Review"
+description: |
+  Happy new football season!
+author:
+  - name: Brandon Brobst
+date: 2025-09-10
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+After a couple of years in the dark, I am excited to be pushing work back out to this site. New football season is always a fun time of year.
+
+Here are a couple things I will be monitoring as the season progresses:
+
+#### Team run defense
+There has been a lot of discussion on the increasing importance of the run game as teams increase defensive focus on stopping the pass with increasing rates of two-high coverages. 
+
+
+```{r, message=FALSE}
+library(nflreadr)
+library(nflplotR)
+library(tidyverse)
+library(gt)
+library(gtExtras)
+
+pbp_2025 <- nflreadr::load_pbp(seasons = 2025)
+
+run_stuffs <- pbp_2025 |> 
+  dplyr::filter(rush == 1) |> 
+  dplyr::mutate(stuff = ifelse(yards_gained <= 1,1,0)) |> 
+  dplyr::summarise(run_stuffs = sum(stuff / dplyr::n()),
+  .by = "defteam") |> 
+  dplyr::arrange(desc(run_stuffs))
+wk1_rundef_dvoa <- read.csv("/Users/brandonbrobst/Documents/topfiftyone/_posts/2025-09-10-2025-week-1-review/data/wk1rundefdvoa.csv")
+
+stuffs_and_dvoa <- run_stuffs |> 
+  dplyr::left_join(wk1_rundef_dvoa,
+  by = c("defteam" = "Tm"))
+
+stuffs_and_dvoa |> 
+  ggplot2::ggplot(aes(x = run_stuffs*100,
+                      y = Rushing.DVOA)) +
+  ggplot2::scale_y_reverse() +
+  ggplot2::theme_minimal() +
+  nflplotR::geom_nfl_logos(aes(team_abbr = defteam,
+                                width = .065)) +
+  ggplot2::labs(x = "Run Stuff Rate (%)",
+  y = "Run Defense DVOA",
+  title = "Run Stuff Rate and Run Defense DVOA",
+  caption = "DVOA from ftnfantasy.com")
+
+  
+```
+
+Based on Dallas' position on this chart- high stuff rate with a below-average DVOA after playing Philadelphia in week 1, I'm interested in creating a sneak-adjusted stuff rate (a "successful" quarterback sneak or tush push converting a 4th & 1 would still go down as a run stuff). 
+
+I'll share progress on that as the season continues.
+
+#### Under center dropbacks
+Several of my favorite podcasts- The Athletic Football Show, Football 301, and others mentioned to watch out for more under center dropback passes with no play action this season. I'll be studying these plays to see when it succeeds and why it fails. 
+
+
+```{r, message=FALSE}
+ftn <- nflreadr::load_ftn_charting(seasons = c(2024,2025))
+
+#Load 2024 pbp to get 24 under center dropback rate
+pbp_24 <- nflreadr::load_pbp(seasons = 2024)
+
+pbp_24_w_ftn <- pbp_24 |> 
+  dplyr::left_join(ftn,
+  by = c("game_id" = "nflverse_game_id",
+          "play_id" = "nflverse_play_id"))
+
+passes_24 <- pbp_24_w_ftn |> 
+  dplyr::filter(pass == 1) |> 
+  dplyr::mutate(uc_pa = ifelse(qb_location == "U" &
+                                is_play_action == 0,
+                                1,0))
+
+uc_pa_rate_24 <- round(nrow(passes_24[passes_24$uc_pa == 1,]) / nrow(passes_24) * 100,
+digits = 2)
+
+pbp_25_w_ftn <- pbp_2025 |>
+  dplyr::filter(week == 1) |> 
+  dplyr::left_join(ftn,
+  by = c("game_id" = "nflverse_game_id",
+          "play_id" = "nflverse_play_id"))
+
+passes_25 <- pbp_25_w_ftn |> 
+  dplyr::filter(pass == 1) |> 
+  dplyr::mutate(uc_pa = ifelse(qb_location == "U" &
+                                is_play_action == 0,
+                                1,0))
+
+uc_pa_rate_25 <- round(nrow(passes_25[passes_25$uc_pa == 1,]) / nrow(passes_25) * 100,
+digits = 2)
+```
+In 2024, per FTN charting, `r uc_pa_rate_24`% of passes were under center and did not include play action.
+
+Through Week 1 in 2025, that jumped up to `r uc_pa_rate_25`%! It'll be interesting to see if this holds.
+
+```{=html}
+<blockquote class="bluesky-embed" data-bluesky-uri="at://did:plc:kgihv26oznpn6cu3p45jzydp/app.bsky.feed.post/3lye5u4i5mk23" data-bluesky-cid="bafyreihsg6oujm3mpxdy57zjxdrexnvdzsk27whepuu2rxaqh5mfohc53e" data-bluesky-embed-color-mode="system"><p lang="en">Matthew Stafford with 3 step dropbacks from under center in the year 2025<br><br><a href="https://bsky.app/profile/did:plc:kgihv26oznpn6cu3p45jzydp/post/3lye5u4i5mk23?ref_src=embed">[image or embed]</a></p>&mdash; Nate Tice (<a href="https://bsky.app/profile/did:plc:kgihv26oznpn6cu3p45jzydp?ref_src=embed">@natetice.bsky.social</a>) <a href="https://bsky.app/profile/did:plc:kgihv26oznpn6cu3p45jzydp/post/3lye5u4i5mk23?ref_src=embed">September 8, 2025 at 4:34 PM</a></blockquote><script async src="https://embed.bsky.app/static/embed.js" charset="utf-8"></script>
+```
+
+
+# {.appendix}
+
+Code to generate the figures in this post can be found on the [topfiftyone github repository](https://github.com/bdbrobst/topfiftyone)
+
+Cap figures courtesy of [overthecap.com](https://overthecap.com/)
+
+topfiftyone is powered by Distill.
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.

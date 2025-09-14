@@ -1,5 +1,22 @@
 [
   {
+    "path": "posts/2025-09-10-2025-week-1-review/",
+    "title": "2025 Week 1 Review",
+    "description": "A short description of the post.",
+    "author": [
+      {
+        "name": "Brandon Brobst",
+        "url": {}
+      }
+    ],
+    "date": "2025-09-10",
+    "categories": [],
+    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
+    "preview": {},
+    "last_modified": "2025-09-10T22:17:28-05:00",
+    "input_file": "2025-week-1-review.knit.md"
+  },
+  {
     "path": "posts/2023-09-13-2023-week-1-observations/",
     "title": "2023 Week 1 Observations",
     "description": "A couple observations from week one of the 2023 NFL season",
