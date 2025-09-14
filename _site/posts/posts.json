@@ -2,7 +2,7 @@
   {
     "path": "posts/2025-09-10-2025-week-1-review/",
     "title": "2025 Week 1 Review",
-    "description": "A short description of the post.",
+    "description": "Happy new football season!",
     "author": [
       {
         "name": "Brandon Brobst",
@@ -11,9 +11,9 @@
     ],
     "date": "2025-09-10",
     "categories": [],
-    "contents": "\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
-    "preview": {},
-    "last_modified": "2025-09-10T22:17:28-05:00",
+    "contents": "\nAfter a couple of years in the dark, I am excited to be pushing work back out to this site. New football season is always a fun time of year.\nHere are a couple things I will be monitoring as the season progresses:\nTeam run defense\nThere has been a lot of discussion on the increasing importance of the run game as teams increase defensive focus on stopping the pass with increasing rates of two-high coverages.\n\n\n\nBased on Dallas’ position on this chart- high stuff rate with a below-average DVOA after playing Philadelphia in week 1, I’m interested in creating a sneak-adjusted stuff rate (a “successful” quarterback sneak or tush push converting a 4th & 1 would still go down as a run stuff).\nI’ll share progress on that as the season continues.\nUnder center dropbacks\nSeveral of my favorite podcasts- The Athletic Football Show, Football 301, and others mentioned to watch out for more under center dropback passes with no play action this season. I’ll be studying these plays to see when it succeeds and why it fails.\n\n\n\nIn 2024, per FTN charting, 2.78% of passes were under center and did not include play action.\nThrough Week 1 in 2025, that jumped up to 3.39%! It’ll be interesting to see if this holds.\nMatthew Stafford with 3 step dropbacks from under center in the year 2025[image or embed]— Nate Tice (@natetice.bsky.social) September 8, 2025 at 4:34 PM\nCode to generate the figures in this post can be found on the topfiftyone github repository\nCap figures courtesy of overthecap.com\ntopfiftyone is powered by Distill.\nDistill is a publication format for scientific and technical writing, native to the web.\nLearn more about using Distill at https://rstudio.github.io/distill.\n\n\n\n",
+    "preview": "posts/2025-09-10-2025-week-1-review/2025-week-1-review_files/figure-html5/unnamed-chunk-1-1.png",
+    "last_modified": "2025-09-13T22:58:39-05:00",
     "input_file": "2025-week-1-review.knit.md"
   },
   {
