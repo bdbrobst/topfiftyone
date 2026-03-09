@@ -1,0 +1,239 @@
+---
+title: "2026 Free Agency Musings"
+description: |
+  Musings on the eve of Free Agency
+author:
+  - name: Brandon Brobst
+    url: {}
+date: 2026-03-04
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+We're a short time away from the legal tampering period opening, but we've already seen some big moves like the Trent McDuffie and Maxx Crosby trades.
+
+I wanted to examine a few topics more closely before the free agency carousel starts spinning.
+
+#### Malik Willis
+
+One major topic is Malik Willis moving from a backup in Green Bay to a likely starter elsewhere.
+
+The below table lists Quaterbacks who were listed as backups (i.e. second on the depth chart) using {nflreadr}'s depth charts function, and who received a 2+ year contract the following season. It is sorted by the contracts in terms of APY as a percent of the cap at signing.
+
+```{r message=FALSE}
+depth_charts <- nflreadr::load_depth_charts(seasons = 2011:2024)
+
+wk_1_backup_qbs <- depth_charts |> 
+  dplyr::filter(week == 1,
+                position == "QB",
+                formation == "Offense",
+                depth_team == 2)
+
+contracts <- nflreadr::load_contracts()
+
+team_abbrs <- nflreadr::load_teams() |> 
+  dplyr::select(team_nick, team_abbr)
+#mutate a season_plus_one to match prior season depth chart to next season contract
+wk_1_backup_qbs <- wk_1_backup_qbs |> 
+  dplyr::mutate(season_p1 = season + 1) |> 
+  dplyr::select(season_p1, gsis_id, full_name)
+
+#Since a backup is more likely to move around from team to team in a season, attempting
+#to join season_p1 to contracts$season could result in a many-to-many relationship.
+#Since we're looking for backups who signed starter-level contracts the following
+#season, we can filter down to contracts > 1 year in length.
+contracts_qb_2_plus <- contracts |> 
+  dplyr::filter(position == "QB",
+                years > 1)
+
+qb_contracts_next_season <- wk_1_backup_qbs |> 
+  dplyr::left_join(contracts_qb_2_plus,
+                   by = c("gsis_id" = "gsis_id",
+                          "season_p1" = "year_signed")) |> 
+  dplyr::filter(!is.na(value)) |> 
+  dplyr::arrange(desc(apy_cap_pct)) |> 
+  dplyr::mutate(team = replace(team, team == "JAX/CHI", "Jaguars")) |> #ugly Nick Foles team fix
+  dplyr::mutate(team = replace(team, team == "CLE/HOU", "Texans")) |> #ugly Nick Foles team fix
+  dplyr::left_join(team_abbrs, by = c("team" = "team_nick")) |> 
+  dplyr::select(gsis_id, player, team_abbr, season_p1, apy, apy_cap_pct) |> 
+  dplyr::top_n(11)
+
+qb_contracts_next_season |> 
+  gt::gt() |> 
+  nflplotR::gt_nfl_headshots("gsis_id") |> 
+  nflplotR::gt_nfl_logos("team_abbr") |> 
+  gt::fmt_percent(apy_cap_pct) |>
+  gt::fmt_number(apy, decimals = 2) |>
+  gt::cols_label(gsis_id = "",
+                 player = "",
+                 team_abbr = "Team",
+                 season_p1 = "Year Signed",
+                 apy= "APY (M)",
+                 apy_cap_pct = "APY % of Cap at Signing")
+
+```
+
+By contextualizing these, it's possible there may be a "tier" that closely parallels the Malik Willis situation and could serve as a baseline for what level deal his representation will be looking for.
+
+Jimmy G with the Niners and Tannehill with the Titans were acquired by the teams they signed their respective contracts with the season prior and had established themselves as the starter in the prior season.
+
+The next "tier" parallels the Willis situation a bit more closely. Nick Foles of course led Philadelphia to a Super Bowl in the 2017 season and played 5 games filling in for Carson Wentz in 2018. Osweiler filled in for Peyton Manning in 7 games 2015.
+
+The third "tier" is perhaps the best narrative fit when accounting for Willis' rumored destinations in Arizona and Miami: Jimmy G reunited with Josh McDaniels after the Raiders moved on from Derek Carr. Teddy Bridgewater came to Carolina after a handful of cromulent starts in New Orleans to replace Cam Newton. The Broncos' new brass in 2018 had familiarity with Case Keenum.
+
+Mike Glennon begins the tier of "bridge Quarterback until the long-term answer is found/come and compete to start" contracts. It appears there is legitimate desire for Willis to be more than that.
+
+With the 2026 cap set at \$301.2 million, a contract at 10.2-10.8% would put it in the \$30.7-\$32.5 million APY range. A risk, but precedent exists.
+
+#### The Slot Defender Market
+
+We've heard it frequently that "Nickel is the new base". Kenny Moore, Jourdan Lewis, Michael Carter II at Cornerback and Tre'von Moehrig, Jalen Pitre, have all gotten sizable contracts while spending a lot of time in the slot.
+
+The below plots the 18 players set to hit Free Agency from [Justis Mosqueda's Consensus Free Agency Board](https://www.acmepackingcompany.com/green-bay-packers-free-agency/79956/nfl-free-agency-top-200-consensus-rankings-update-post-franchise-tags) and played at least 100 slot snaps over the last two seasons.
+
+```{r message=FALSE}
+
+fa_ids <- c(131960,
+           61790,
+           34918,
+           83469,
+           100412,
+           55797,
+           11815,
+           11854,
+           55912,
+           98834,
+           10898,
+           60649,
+           76625,
+           83176,
+           156083,
+           83341,
+           79126,
+           83122,
+           41817,
+           83326,
+           11766,
+           156070,
+           11836,
+           11782,
+           55940,
+           55088,
+           101665,
+           10698,
+           97514,
+           49116,
+           51423,
+           56065,
+           77848,
+           41662,
+           11780,
+           7641,
+           49371,
+           76641,
+           55967,
+           49408,
+           101398,
+           90621,
+           8000,
+           11941,
+           8361,
+           49268,
+           11946,
+           8665,
+           56203)
+
+slot_cov <- read.csv("/Users/brandonbrobst/Documents/topfiftyone/_posts/2026-03-04-2026-free-agency-musings/data/slot_coverage.csv")
+
+
+agg_slot_24_25 <- slot_cov |>
+    dplyr::filter(player_id %in% fa_ids) |>
+    dplyr::group_by(player_id, player) |>
+    dplyr::summarise(cov_snaps = sum(coverage_snaps),
+                    yds_allowed = sum(yards),
+                    yds_allowed_per_snap = yds_allowed / cov_snaps) |>
+    dplyr::ungroup() |>
+    dplyr::filter(cov_snaps >= 100)
+
+ggplot2::ggplot(data = agg_slot_24_25, ggplot2::aes(x = cov_snaps,
+                    y = yds_allowed_per_snap)) +
+                    ggplot2::geom_text(ggplot2::aes(label = player),
+                                       size = 2,
+                                       check_overlap = TRUE) +
+                    ggplot2::theme_bw() +
+                    ggplot2::labs(x = "Slot Coverage Snaps",
+                    y = "Yards Allowed Per Slot Coverage Snap",
+                    title = "Slot Coverage",
+                    subtitle = "2026 Free Agent Safies and Cornerbacks",
+                    caption = "Data:Pro Football Focus")
+```
+
+The three names I'll be tracking closely are:
+
+-   Kader Kohou: I hope he recovered fully from a torn ACL in training camp last season. Perhaps a reunion with Anthony Weaver in Baltimore is in store.
+
+-   Jalen Thompson: Does a team that wants to emulate Seattle's scheme see JT as an Emmanwori-esque chess piece?
+
+-   Roger McCreary: The Rams traded for him last season, but made a big splash with the McDuffie trade. Snap count has decreased each season so health is a question mark, but could prove a value signing for a team based on his market value.
+
+#### Offensive Line
+
+A deep dive I'd like to do when the dust has settled on 2026 Free Agency is if there's been a convergence on resource allocation across "weak-link" groups like offensive line and defensive secondary.
+
+Before then, here's a look at where teams scored in ESPN's pass block and run block win rates last season (obligatory team logos on a scatterplot viz!). Teams that made the playoffs are highlighted:
+
+```{r message=FALSE}
+
+espn_win_rates <- read.csv("/Users/brandonbrobst/Documents/topfiftyone/_posts/2026-03-04-2026-free-agency-musings/data/espn_win_rates.csv")
+playoff_teams <- c("DEN", "SEA", "LA", "CAR", "GB", "CHI", "BUF", "JAX", "SF", "PHI", "LAC", "NE", "HOU", "PIT")
+teams <- nflreadr::load_teams()
+teams <- teams |>
+    dplyr::mutate(alpha = ifelse(team_abbr %in% playoff_teams,1,0.2))
+
+espnwr_fplot <- espn_win_rates |>
+    dplyr::left_join(teams,
+                    by = c("TEAM" = "team_name"))
+
+mean_pbwr <- mean(espnwr_fplot$pbwr)
+mean_rbwr <- mean(espnwr_fplot$rbwr)
+
+ggplot2::ggplot(data = espnwr_fplot,
+               ggplot2::aes(x = rbwr, y = pbwr)) +
+               nflplotR::geom_nfl_logos(ggplot2::aes(team_abbr = team_abbr,
+                                            alpha = alpha),
+                                       width = 0.075) +
+               ggplot2::geom_hline(yintercept = mean_pbwr) +
+               ggplot2::geom_vline(xintercept = mean_rbwr) +
+               ggplot2::theme_minimal() +
+               ggplot2::labs(x = "Run Block Win Rate",
+                    y = "Pass Block Win Rate",
+                    title = "Offensive Line Win Rates",
+                    caption = "Data:ESPN")
+```
+
+Every team above average at both pass and run block win rate made the playoffs! Then there's Houston and the the Chargers (who I imagine will improve with Rashawn Slater and Joe Alt back healthy).
+
+Among teams in the "not where you want to be" quadrant, I'll be interested to see how Detriot and New Orleans seek to improve their line play with offseason acquisitions.
+
+After the release of Taylor Decker, just Penei Sewell is left from the formidable Lions' line from a couple seasons ago. Do they view Giovanni Manu as the next Left Tackle? Juice Scruggs was included in the David Montgomery trade, but what additional moves do they make to improve the interior line?
+
+New Orleans is not shy to spend premium draft capital on the line, with Kelvin Banks and Taliese Fuaga. Dillon Radunz took over at Left Guard after the Trevor Penning trade, but is a free agent which leaves a big hole at that position. Do they look for a long-term answer at Center after Erik McCoy has spent twenty games over the last two seasons on IR?
+
+Best of luck to all the teams as they begin their roster makeovers!
+
+####  {.appendix}
+
+Code to generate the figures in this post can be found on the [topfiftyone github repository](https://github.com/bdbrobst/topfiftyone)
+
+Cap figures courtesy of [overthecap.com](https://overthecap.com/)
+
+topfiftyone is powered by Distill.
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
