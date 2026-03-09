@@ -1,9 +1,19 @@
 ---
 title: "About this blog"
 description: |
-  Some additional details about the blog
+  A place for me to learn more about the NFL and its salary cap
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+If you've somehow stumbled across this blog, welcome!
+
+I've been a football fan as long as I can remember.
+![](images/me.png){fig-alt="A picture of me in my youth wearing a toy Cowboys helmet and Bengals pajamas" width="250px"}
+
+Thanks to the excellent public tools now available (nflreadr, OverTheCap, NextGenStats just to name a few) analysis of the sport is more accessible than ever.
+
+The aim of this blog is to further my understanding of the game and improve my skills in storytelling with data.
+
+[Connect with me on Bluesky](https://bsky.app/profile/topfiftyone.com)
